@@ -41,7 +41,6 @@ const getDoctor = async (req, res) => {
     } catch (error) {
         res.status(500).send({ message: error.message })
     }
-
 }
 
 const updateDoctor = async (req, res) => {
@@ -61,10 +60,41 @@ const updateDoctor = async (req, res) => {
     }
 }
 
+const updateFavorite = async (req, res) => {
+    const doctorId = req.params.id
+    const favorite = req.body.favorite
+    try {
+        const updatedRows = await Doctor.update({ favorite }, { where: { id: doctorId } });
+        if (updatedRows && updatedRows[0] > 0) {
+            res.status(200).send({ message: `${updatedRows[0]} medico(s) com informação de favorito atualizada com sucesso` })
+        } else {
+            res.status(404).send({ message: `Medico com id ${doctorId} não encontrado para atualizar informação de favorito` })
+        }
+    } catch (error) {
+        res.status(500).send({ message: error.message })
+    }
+}
+
+const deleteDoctor = async (req, res) => {
+    const doctorId = req.params.id
+    try {
+        const rowsDeleted = await Doctor.destroy({ where: { id: doctorId } });
+        if (rowsDeleted) {
+            res.status(200).send({ message: `${rowsDeleted[0]} medico(s) deletado(s) com sucesso` })
+        } else {
+            res.status(404).send({ message: `Medico com id ${doctorId} não encontrado para deletar` })
+        }
+    } catch (error) {
+        res.status(500).send({ message: error.message })
+    }
+}
+
 
 module.exports = {
     createDoctor,
     getAllDoctors,
     getDoctor,
     updateDoctor,
+    updateFavorite,
+    deleteDoctor
 }
