@@ -24,15 +24,47 @@ const getAllDoctors = async (req, res) => {
     } catch (error) {
         res.status(500).send ({ message: error.mesage })
         //messageError(res, error)
+    }     
+}
+
+const getDoctor = async (req, res) => {
+    const doctorId = req.params.id
+    try {
+        const doctor = await Doctor.findOne({
+            where: { id: doctorId }
+        });
+        if (doctor) {
+            res.status(200).send(doctor)
+        } else {
+            res.status(404).send({ message: `Médico não encontrado com o id ${doctorId}, não encontrado na base.` })
+        }
+    } catch (error) {
+        res.status(500).send({ message: error.message })
+    }
+
+}
+
+const updateDoctor = async (req, res) => {
+    const doctorId = req.params.id
+    const { name, crm, specialty, clinic, phone, favorite } = req.body
+    try {
+        const rowsUpdated = await Doctor.update({ name, crm, specialty, clinic, phone, favorite }, {
+            where: { id: doctorId }
+        });
+        if (rowsUpdated && rowsUpdated[0] > 0) {
+            res.status(200).send({ message: `${rowsUpdated[0]} medico(s) atualizado(s)` })
+        } else {
+            res.status(404).send({ message: `Medico com id ${doctorId} não encontrado para atualizar` })
+        }
+    } catch (error) {
+        res.status(500).send({ message: error.message })
     }
 }
 
-//const messagEror = (res, error) => {
-  //  res.status(500).send ({ message: error.mesage })
-
-//}
 
 module.exports = {
     createDoctor,
     getAllDoctors,
+    getDoctor,
+    updateDoctor,
 }
