@@ -1,6 +1,6 @@
 var objJson = [];
 
-const URL = `http://localhost:3000/doctors`;
+const URL = `https://deasantos-meu-medico-favorito.herokuapp.com`;
 
 function getDoctors() {
   fetch(URL)
